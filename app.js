@@ -4,11 +4,20 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const bodyParser = require("body-parser");
+const helmet = require("helmet");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+const mongoDB = process.env.MONGODB_URL;
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error"));
 
 var indexRouter = require("./routes/index");
 
 var app = express();
 
+app.use(helmet());
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
