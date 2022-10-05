@@ -9,6 +9,8 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+require("./passport");
+
 const mongoDB = process.env.MONGODB_URL;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;

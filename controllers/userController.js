@@ -1,4 +1,7 @@
 const { validationResult, query } = require("express-validator");
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 
@@ -23,15 +26,22 @@ exports.sign_up_post = [
     if (!errors.isEmpty()) {
       return res.status(400).json({ error: "Your query parameters are wrong" });
     }
+    bcrypt.hash(req.query.password, 10, function (err, password) {
+      if (err) {
+        return res.status(400).json({ error: "Error hashing the password" });
+      }
+      const user = new User({
+        name: req.query.name,
+        username: req.query.username,
+        password: password,
+      });
 
-    const user = new User({
-      name: req.query.name,
-      username: req.query.username,
-      password: req.query.password,
-    });
-    user.save((err) => {
-      if (err) return res.status(503).json({ error: "Error saving the user" });
-      return res.json(user);
+      user.save((err) => {
+        if (err) {
+          return res.status(503).json({ error: "Error saving the user" });
+        }
+        return res.json(user);
+      });
     });
   },
 ];
@@ -41,31 +51,29 @@ exports.sign_out_post = (req, res) => {
 };
 
 exports.sign_in_post = [
-  query("username", "Username must be a string between 2 and 100 chars")
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .escape(),
-  query("password", "Password must be a string between 7 and 150 chars")
-    .trim()
-    .isLength({ min: 7, max: 150 })
-    .escape(),
+  passport.authenticate("local", { session: false }),
   (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ error: "Your query parameters are wrong" });
-    }
-
-    User.findOne({ username: req.query.username }).exec((err, user) => {
-      if (err) {
-        return res.status(503).json({ error: "Error searching the user" });
-      }
-      if (!user) {
-        return res.status(400).json({ error: "The user was not found" });
-      }
-      if (user.password !== req.query.password) {
-        return res.status(400).json({ error: "Password is incorrect" });
-      }
-      return res.json({ user, token: "bearer succesfully signed in" });
-    });
+    const token = jwt.sign(req.user, process.env.JWT_KEY);
+    return res.json({ user: req.user, token });
   },
+  // // if (err) {
+  // //   return res.status(400).json({ error: "Error authenticating" });
+  // // }
+  // console.log("user at authenticate", user);
+  // return res.json({ user, token: "bearer logged in boy!" });
+  // return res.json("dou");
 ];
+// [
+// query("username", "Username must be a string between 2 and 100 chars")
+//   .trim()
+//   .isLength({ min: 2, max: 100 })
+//   .escape(),
+// query("password", "Password must be a string between 7 and 150 chars")
+//   .trim()
+//   .isLength({ min: 7, max: 150 })
+//   .escape(),
+// const errors = validationResult(req);
+// if (!errors.isEmpty()) {
+//   return res.status(400).json({ error: "Wrong query parameters" });
+// }
+// ];
