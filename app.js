@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
@@ -17,6 +18,7 @@ var indexRouter = require("./routes/index");
 
 var app = express();
 
+app.use(cors());
 app.use(helmet());
 app.use(logger("dev"));
 app.use(bodyParser.json());
