@@ -37,12 +37,15 @@ exports.posts_post = [
       title: req.query.title,
       keyword: req.query.keyword,
       text: req.query.text,
-      timestamp: req.query.timestamp,
-      published: req.query.published,
+      published: !!req.query.published,
+      user: req.user._id,
     });
 
+    console.log("post", post);
+
     post.save((err) => {
-      if (err) return res.status(503).json({ error: "Error saving the post" });
+      if (err)
+        return res.status(503).json({ error: "Error saving the post", err });
       return res.json(post);
     });
   },

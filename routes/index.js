@@ -1,3 +1,4 @@
+const passport = require("passport");
 var express = require("express");
 var router = express.Router();
 
@@ -6,7 +7,15 @@ const commentRouter = require("./comment");
 const userRouter = require("./user");
 
 router.use("/", userRouter);
-router.use("/posts", postRouter);
-router.use("/comments", commentRouter);
+router.use(
+  "/posts",
+  passport.authenticate("jwt", { session: false }),
+  postRouter
+);
+router.use(
+  "/comments",
+  passport.authenticate("jwt", { session: false }),
+  commentRouter
+);
 
 module.exports = router;

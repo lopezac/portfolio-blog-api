@@ -53,27 +53,9 @@ exports.sign_out_post = (req, res) => {
 exports.sign_in_post = [
   passport.authenticate("local", { session: false }),
   (req, res) => {
-    const token = jwt.sign(req.user, process.env.JWT_KEY);
-    return res.json({ user: req.user, token });
+    jwt.sign(req.user.toJSON(), process.env.JWT_KEY, (err, token) => {
+      if (err) res.status(503).json({ error: err });
+      return res.json({ user: req.user, token });
+    });
   },
-  // // if (err) {
-  // //   return res.status(400).json({ error: "Error authenticating" });
-  // // }
-  // console.log("user at authenticate", user);
-  // return res.json({ user, token: "bearer logged in boy!" });
-  // return res.json("dou");
 ];
-// [
-// query("username", "Username must be a string between 2 and 100 chars")
-//   .trim()
-//   .isLength({ min: 2, max: 100 })
-//   .escape(),
-// query("password", "Password must be a string between 7 and 150 chars")
-//   .trim()
-//   .isLength({ min: 7, max: 150 })
-//   .escape(),
-// const errors = validationResult(req);
-// if (!errors.isEmpty()) {
-//   return res.status(400).json({ error: "Wrong query parameters" });
-// }
-// ];

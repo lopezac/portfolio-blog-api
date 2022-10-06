@@ -1,12 +1,15 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 const bcrypt = require("bcryptjs");
 
 const User = require("./models/user");
+const { json } = require("body-parser");
 
+// Local strategy
 passport.use(
   new LocalStrategy(function (username, password, done) {
-    console.log("username, password at localStrategy", username, password);
     User.findOne({ username: username }).exec((err, user) => {
       if (err) return done(err);
       if (!user) {
@@ -20,6 +23,22 @@ passport.use(
         }
         return done(null, user);
       });
+    });
+  })
+);
+
+// JWT(JSON Web Token) strategy
+let opts = {
+  secretOrKey: process.env.JWT_KEY,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+};
+passport.use(
+  new JwtStrategy(opts, function (jwt_payload, done) {
+    console.log("jwt_payload", jwt_payload);
+    User.findById(jwt_payload._id).exec((err, user) => {
+      if (err) return done(err);
+      if (!user) return done(null, false, { message: "No user found" });
+      return done(null, user);
     });
   })
 );
