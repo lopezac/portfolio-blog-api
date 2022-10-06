@@ -28,9 +28,7 @@ exports.posts_post = [
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res
-        .status(400)
-        .json({ error: "There are errors with your request" });
+      return res.status(400).json({ error: "Errors with the request" });
     }
 
     const post = new Post({
@@ -41,18 +39,21 @@ exports.posts_post = [
       user: req.user._id,
     });
 
-    console.log("post", post);
-
     post.save((err) => {
-      if (err)
+      if (err) {
         return res.status(503).json({ error: "Error saving the post", err });
+      }
       return res.json(post);
     });
   },
 ];
 
 exports.posts_id_get = (req, res) => {
-  res.json("posts_id_get");
+  Post.findById(req.params.postId).exec((err, post) => {
+    console.log("req.params", req.params, post);
+    if (err) return res.status(400).json({ error: "No post was found" });
+    return res.json(post);
+  });
 };
 
 exports.posts_id_put = (req, res) => {

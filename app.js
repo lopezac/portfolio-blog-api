@@ -9,14 +9,14 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-require("./passport");
+require("./src/middleware/auth");
+var indexRouter = require("./routes/index");
 
+// MongoDB
 const mongoDB = process.env.MONGODB_URL;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error"));
-
-var indexRouter = require("./routes/index");
 
 var app = express();
 
@@ -27,7 +27,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
 app.use("/", indexRouter);
 
 // catch 404 and forward to error handler

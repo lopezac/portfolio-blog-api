@@ -5,7 +5,6 @@ const ExtractJwt = require("passport-jwt").ExtractJwt;
 const bcrypt = require("bcryptjs");
 
 const User = require("./models/user");
-const { json } = require("body-parser");
 
 // Local strategy
 passport.use(
@@ -28,7 +27,7 @@ passport.use(
 );
 
 // JWT(JSON Web Token) strategy
-let opts = {
+const opts = {
   secretOrKey: process.env.JWT_KEY,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
@@ -42,3 +41,8 @@ passport.use(
     });
   })
 );
+
+// Passport Authentication methods
+exports.JWTAuth = passport.authenticate("jwt", { session: false });
+
+exports.LocalAuth = passport.authenticate("local", { session: false });

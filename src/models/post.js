@@ -15,4 +15,8 @@ PostSchema.virtual("timestampFormat").get(function () {
   return format(this.timestamp, "PPP");
 });
 
+PostSchema.virtual("titleFormat").get(function () {
+  return this.title.toLowerCase().replaceAll(" ", "-");
+});
+
 module.exports = mongoose.model("Post", PostSchema);
