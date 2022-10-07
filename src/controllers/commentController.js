@@ -1,7 +1,12 @@
-const Comment = require("../models/comment");
+const { getComments } = require("../services/commentService");
 
-exports.comments_get = (req, res) => {
-  res.send("comments_get");
+exports.comments_get = async (req, res) => {
+  try {
+    const comments = await getComments();
+    return res.json({ comments });
+  } catch (err) {
+    return res.status(503).json({ error: "Error getting comments", err });
+  }
 };
 
 exports.comments_post = (req, res) => {

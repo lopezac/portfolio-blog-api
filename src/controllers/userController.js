@@ -1,6 +1,8 @@
-const hashPassword = require("../services/hashPassword");
-const createUser = require("../services/createUser");
-const createToken = require("../services/createToken");
+const {
+  createUser,
+  createToken,
+  hashPassword,
+} = require("../services/authService");
 
 exports.sign_up_post = async (req, res) => {
   try {

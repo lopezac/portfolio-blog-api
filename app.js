@@ -6,17 +6,11 @@ var logger = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
-const mongoose = require("mongoose");
 require("dotenv").config();
 
 require("./src/middleware/auth");
+require("./src/configs/db.config");
 var indexRouter = require("./src/routes/index");
-
-// MongoDB
-const mongoDB = process.env.MONGODB_URL;
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error"));
 
 var app = express();
 

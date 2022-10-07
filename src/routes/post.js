@@ -12,6 +12,12 @@ router.get("/:postId", postValidation.postId, postController.posts_id_get);
 
 router.put("/:postId", postValidation.postId, postController.posts_id_put);
 
+router.get(
+  "/:postId/comments",
+  postValidation.postId,
+  postController.posts_comments_get
+);
+
 router.delete(
   "/:postId",
   postValidation.postId,
