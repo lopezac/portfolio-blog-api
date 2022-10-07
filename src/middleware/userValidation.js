@@ -1,11 +1,6 @@
-const { validationResult, query } = require("express-validator");
+const { query } = require("express-validator");
 
-const throwErrors = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ error: "Your query parameters are wrong" });
-  }
-};
+const validationErrors = require("./validationErrors");
 
 exports.signUp = [
   query("name", "Name must be between 2 and 150 chars")
@@ -22,7 +17,7 @@ exports.signUp = [
     .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/)
     .withMessage("Password must one lowercase and uppercase letter, one digit")
     .escape(),
-  throwErrors(),
+  validationErrors,
 ];
 
 exports.signIn = [
@@ -31,5 +26,5 @@ exports.signIn = [
     .isLength({ min: 2, max: 100 })
     .escape(),
   query("password", "Password must be between 7 and 150 chars").trim().escape(),
-  throwErrors(),
+  validationErrors,
 ];

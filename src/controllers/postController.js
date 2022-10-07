@@ -1,59 +1,34 @@
-const { validationResult, query } = require("express-validator");
+const postFind = require("../services/postFind");
+const createPost = require("../services/createPost");
 
-const Post = require("../models/post");
-
-exports.posts_get = (req, res) => {
-  Post.find({}).exec((err, posts) => {
-    if (err) return res.status(404).json({ error: "No posts were found" });
+exports.posts_get = async (req, res) => {
+  try {
+    const posts = await postFind.getPosts();
     return res.json(posts);
-  });
+  } catch {
+    return res.status(404).json({ error: "Error getting posts" });
+  }
 };
 
-exports.posts_post = [
-  query("title", "Title cant be empty must be between 3 and 300 chars")
-    .trim()
-    .isLength({ min: 3, max: 300 })
-    .escape(),
-  query("keyword", "Keyword cant be empty must be between 2 and 80 chars")
-    .trim()
-    .isLength({ min: 2, max: 80 })
-    .escape(),
-  query("text", "Text cant be empty must be between 3 and 5000 chars")
-    .trim()
-    .isLength({ min: 3, max: 5000 })
-    .escape(),
-  query("timestamp").trim(),
-  query("published").escape(),
-
-  (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ error: "Errors with the request" });
-    }
-
-    const post = new Post({
-      title: req.query.title,
-      keyword: req.query.keyword,
-      text: req.query.text,
-      published: !!req.query.published,
-      user: req.user._id,
-    });
-
-    post.save((err) => {
-      if (err) {
-        return res.status(503).json({ error: "Error saving the post", err });
-      }
-      return res.json(post);
-    });
-  },
-];
-
-exports.posts_id_get = (req, res) => {
-  Post.findById(req.params.postId).exec((err, post) => {
-    console.log("req.params", req.params, post);
-    if (err) return res.status(400).json({ error: "No post was found" });
+exports.posts_post = async (req, res) => {
+  try {
+    const { title, keyword, text, published } = req.query;
+    const userId = req.user._id;
+    const post = await createPost(title, text, keyword, published, userId);
     return res.json(post);
-  });
+  } catch (err) {
+    return res.status(503).json({ error: "Error saving the post", err });
+  }
+};
+
+exports.posts_id_get = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const post = postFind.getPost(postId);
+    return res.json(post);
+  } catch (err) {
+    return res.status(503).json({ error: "Error finding the post", err });
+  }
 };
 
 exports.posts_id_put = (req, res) => {

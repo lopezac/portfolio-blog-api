@@ -1,6 +1,5 @@
-function hashPassword() {
-  // return bcrypt.hashSync(req.query.password, 10);
-  bcrypt.hash(req.query.password, 10, function (err, password) {});
-}
+const bcrypt = require("bcryptjs");
 
-module.exports = hashPassword;
+module.exports = async (password) => {
+  return await bcrypt.hash(password, 10);
+};

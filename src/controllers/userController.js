@@ -1,35 +1,29 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const hashPassword = require("../services/hashPassword");
+const createUser = require("../services/createUser");
+const createToken = require("../services/createToken");
 
-const User = require("../models/user");
-
-exports.sign_up_post = (req, res) => {
-  bcrypt.hash(req.query.password, 10, function (err, password) {
-    if (err) {
-      return res.status(400).json({ error: "Error hashing the password" });
-    }
-    const user = new User({
-      name: req.query.name,
-      username: req.query.username,
-      password: password,
-    });
-
-    user.save((err) => {
-      if (err) {
-        return res.status(503).json({ error: "Error saving the user" });
-      }
-      return res.json(user);
-    });
-  });
+exports.sign_up_post = async (req, res) => {
+  try {
+    const { name, username, password } = req.query;
+    const hashedPassword = await hashPassword(password);
+    const user = await createUser(name, username, hashedPassword);
+    return res.json(user);
+  } catch (err) {
+    return res.status(503).json({ error: "Error signing up the user" });
+  }
 };
 
 exports.sign_out_post = (req, res) => {
-  res.send("sign out post");
+  delete req.user;
+  return res.json({ message: "Signed out successfully!" });
 };
 
-exports.sign_in_post = (req, res) => {
-  jwt.sign(req.user.toJSON(), process.env.JWT_KEY, (err, token) => {
-    if (err) res.status(503).json({ error: err });
-    return res.json({ user: req.user, token });
-  });
+exports.sign_in_post = async (req, res) => {
+  try {
+    const { user } = req;
+    const token = await createToken(user);
+    return res.json({ user, token });
+  } catch (err) {
+    return res.status(503).json({ error: "Error signing in the user" });
+  }
 };

@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 require("./src/middleware/auth");
-var indexRouter = require("./routes/index");
+var indexRouter = require("./src/routes/index");
 
 // MongoDB
 const mongoDB = process.env.MONGODB_URL;
