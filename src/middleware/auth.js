@@ -33,7 +33,6 @@ const opts = {
 };
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
-    console.log("jwt_payload", jwt_payload);
     User.findById(jwt_payload._id).exec((err, user) => {
       if (err) return done(err);
       if (!user) return done(null, false, { message: "No user found" });
