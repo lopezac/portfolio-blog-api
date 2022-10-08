@@ -2,9 +2,9 @@ const passport = require("passport");
 var express = require("express");
 var router = express.Router();
 
-const postRouter = require("./post");
-const commentRouter = require("./comment");
-const userRouter = require("./user");
+const postRouter = require("./post.route");
+const commentRouter = require("./comment.route");
+const userRouter = require("./user.route");
 
 router.use("/", userRouter);
 router.use(

@@ -2,7 +2,7 @@ const {
   createUser,
   createToken,
   hashPassword,
-} = require("../services/authService");
+} = require("../services/auth.service");
 
 exports.sign_up_post = async (req, res) => {
   try {

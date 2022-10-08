@@ -15,8 +15,29 @@ exports.createPost = [
     .trim()
     .isLength({ min: 3, max: 5000 })
     .escape(),
-  query("timestamp").trim(),
-  query("published").escape(),
+  query("timestamp").trim().optional(),
+  query("published").escape().optional(),
+  validationErrors,
+];
+
+exports.updatePost = [
+  query("title", "Title must be between 3 and 300 chars")
+    .trim()
+    .isLength({ min: 3, max: 300 })
+    .escape()
+    .optional(),
+  query("keyword", "Keyword must be between 2 and 80 chars")
+    .trim()
+    .isLength({ min: 2, max: 80 })
+    .escape()
+    .optional(),
+  query("text", "Text must be between 3 and 5000 chars")
+    .trim()
+    .isLength({ min: 3, max: 5000 })
+    .escape()
+    .optional(),
+  query("timestamp").trim().optional(),
+  query("published").escape().optional(),
   validationErrors,
 ];
 

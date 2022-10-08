@@ -1,18 +1,17 @@
-const Post = require("../models/post");
-const Comment = require("../models/comment");
-const { formatTitle } = require("../utils/helper.util");
-const isObjectId = require("./isObjectId");
+const Post = require("../models/post.model");
+const Comment = require("../models/comment.model");
+const { formatTitle, isObjectId } = require("../utils/helper.util");
 
-async function createPost(title, text, keyword, published, userId) {
+async function createPost(title, text, keyword, published, user) {
   try {
     const post = new Post({
       title,
       text,
       keyword,
       published: !!published,
-      user: userId,
+      user,
     });
-    post.save();
+    await post.save();
     return post;
   } catch (err) {
     throw Error("Error creating the post: ", err);
@@ -25,11 +24,13 @@ async function getPosts() {
 }
 
 async function getPost(postId) {
+  let post;
   if (isObjectId(postId)) {
-    return await getPostById(postId);
+    post = await getPostById(postId);
   } else {
-    return await getPostByTitle(postId);
+    post = await getPostByTitle(postId);
   }
+  return post;
 }
 
 async function getPostComments(postId) {
@@ -47,6 +48,14 @@ async function deletePost(postId) {
     await Post.findByIdAndDelete(post._id);
   } catch (err) {
     throw Error("Error while deleting post");
+  }
+}
+
+async function updatePost(postId, newPost) {
+  try {
+    await Post.findByIdAndUpdate(postId, newPost);
+  } catch (err) {
+    throw Error("Error while updating post");
   }
 }
 
@@ -77,4 +86,5 @@ module.exports = {
   getPosts,
   getPostComments,
   deletePost,
+  updatePost,
 };

@@ -4,8 +4,9 @@ const {
   getPost,
   getPostComments,
   deletePost,
-} = require("../services/postService");
-const { deleteComments } = require("../services/commentService");
+  updatePost,
+} = require("../services/post.service");
+const { deleteComments } = require("../services/comment.service");
 
 exports.posts_get = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ exports.posts_post = async (req, res) => {
 
 exports.posts_id_get = async (req, res) => {
   try {
-    const postId = req.params.postId;
+    const { postId } = req.params;
     const post = await getPost(postId);
     return res.json(post);
   } catch (err) {
@@ -47,17 +48,30 @@ exports.posts_comments_get = async (req, res) => {
   }
 };
 
-exports.posts_id_put = (req, res) => {
-  res.json("posts_id_put");
+exports.posts_id_put = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const newPost = { _id: postId };
+
+    for (const param in req.query) {
+      newPost[param] = req.query[param];
+    }
+    await updatePost(postId, newPost);
+
+    return res.json({ message: "Succesfully updated the post ", postId });
+  } catch (err) {
+    return res.status(503).json({ error: "Error updating the post", err });
+  }
 };
 
 exports.posts_id_delete = async (req, res) => {
   try {
-    const postId = req.params.postId;
-    const post = await getPost(postId);
+    const { postId } = req.params;
     const comments = await getPostComments(postId);
+
     await deleteComments(comments);
-    await deletePost(post);
+    await deletePost(postId);
+
     return res.json({ message: "Succesfully deleted post and it's comments" });
   } catch (err) {
     return res.status(503).json({ error: "Error deleting the port ", err });
