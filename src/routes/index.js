@@ -7,15 +7,7 @@ const commentRouter = require("./comment.route");
 const userRouter = require("./user.route");
 
 router.use("/", userRouter);
-router.use(
-  "/posts",
-  passport.authenticate("jwt", { session: false }),
-  postRouter
-);
-router.use(
-  "/comments",
-  passport.authenticate("jwt", { session: false }),
-  commentRouter
-);
+router.use("/posts", postRouter);
+router.use("/comments", commentRouter);
 
 module.exports = router;

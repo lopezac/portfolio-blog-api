@@ -35,10 +35,15 @@ function getPageQuery(page = 1) {
   return (page - 1) * 20;
 }
 
+function getQueryOptions(query) {
+  const filter = getFilterQuery(query);
+  const sort = getSortQuery(query["sort"]);
+  const page = getPageQuery(query["page"]);
+  return { filter, sort, page };
+}
+
 module.exports = {
   formatTitle,
   isObjectId,
-  getFilterQuery,
-  getSortQuery,
-  getPageQuery,
+  getQueryOptions,
 };

@@ -5,6 +5,17 @@ const {
   updateComment,
   deleteComment,
 } = require("../services/comment.service");
+const { getQueryOptions } = require("../utils/helper.util");
+
+exports.comments_get = async (req, res) => {
+  try {
+    const { filter, sort, page } = await getQueryOptions(req.query);
+    const comments = await getComments(filter, sort, page);
+    return res.json(comments);
+  } catch (err) {
+    return res.status(503).json({ error: "Error getting comments", err });
+  }
+};
 
 exports.comments_post = async (req, res) => {
   try {
@@ -13,15 +24,6 @@ exports.comments_post = async (req, res) => {
     return res.json(comment);
   } catch (err) {
     return res.status(400).json({ error: "Error while creating a comment" });
-  }
-};
-
-exports.comments_get = async (req, res) => {
-  try {
-    const comments = await getComments();
-    return res.json(comments);
-  } catch (err) {
-    return res.status(503).json({ error: "Error getting comments", err });
   }
 };
 

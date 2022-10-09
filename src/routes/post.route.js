@@ -3,14 +3,25 @@ const router = express.Router();
 
 const postController = require("../controllers/post.controller");
 const postValidation = require("../middleware/postValidation");
+const auth = require("../middleware/auth");
 
 router.get("/", postController.posts_get);
 
-router.post("/", postValidation.createPost, postController.posts_post);
+router.post(
+  "/",
+  auth.JWTAuth,
+  postValidation.createPost,
+  postController.posts_post
+);
 
 router.get("/:postId", postValidation.postId, postController.posts_id_get);
 
-router.put("/:postId", postValidation.updatePost, postController.posts_id_put);
+router.put(
+  "/:postId",
+  auth.JWTAuth,
+  postValidation.updatePost,
+  postController.posts_id_put
+);
 
 router.get(
   "/:postId/comments",
@@ -20,6 +31,7 @@ router.get(
 
 router.delete(
   "/:postId",
+  auth.JWTAuth,
   postValidation.postId,
   postController.posts_id_delete
 );
