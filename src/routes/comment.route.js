@@ -9,7 +9,7 @@ router.get("/", commentController.comments_get);
 
 router.post(
   "/",
-  auth.JWTAuth,
+  auth.JWTAuth(),
   commentValidation.createComment,
   commentController.comments_post
 );
@@ -22,14 +22,14 @@ router.get(
 
 router.put(
   "/:commentId",
-  auth.JWTAuth,
+  auth.JWTAuth(),
   commentValidation.updateComment,
   commentController.comments_id_put
 );
 
 router.delete(
   "/:commentId",
-  auth.JWTAuth,
+  auth.JWTAuth(),
   commentValidation.commentId,
   commentController.comments_id_delete
 );

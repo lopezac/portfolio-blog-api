@@ -10,7 +10,7 @@ router.post("/sign-up", validation.signUp, userController.sign_up_post);
 router.post(
   "/sign-in",
   validation.signIn,
-  auth.LocalAuth,
+  auth.LocalAuth(),
   userController.sign_in_post
 );
 

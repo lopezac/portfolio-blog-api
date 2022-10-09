@@ -9,7 +9,7 @@ router.get("/", postController.posts_get);
 
 router.post(
   "/",
-  auth.JWTAuth,
+  auth.JWTAuth(),
   postValidation.createPost,
   postController.posts_post
 );
@@ -18,7 +18,7 @@ router.get("/:postId", postValidation.postId, postController.posts_id_get);
 
 router.put(
   "/:postId",
-  auth.JWTAuth,
+  auth.JWTAuth(),
   postValidation.updatePost,
   postController.posts_id_put
 );
@@ -31,7 +31,7 @@ router.get(
 
 router.delete(
   "/:postId",
-  auth.JWTAuth,
+  auth.JWTAuth(),
   postValidation.postId,
   postController.posts_id_delete
 );

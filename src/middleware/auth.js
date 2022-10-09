@@ -43,9 +43,9 @@ passport.use(
 
 // Passport Authentication methods
 exports.JWTAuth = () => {
-  passport.authenticate("jwt", { session: false });
+  return passport.authenticate("jwt", { session: false });
 };
 
 exports.LocalAuth = () => {
-  passport.authenticate("local", { session: false });
+  return passport.authenticate("local", { session: false });
 };
