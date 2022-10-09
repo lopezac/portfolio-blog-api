@@ -7,13 +7,19 @@ const {
   updatePost,
 } = require("../services/post.service");
 const { deleteComments } = require("../services/comment.service");
-const { getFilterQuery, getSortQuery } = require("../utils/helper.util");
+const {
+  getFilterQuery,
+  getSortQuery,
+  getPageQuery,
+} = require("../utils/helper.util");
 
 exports.posts_get = async (req, res) => {
   try {
     const filterQuery = getFilterQuery(req.query);
     const sortQuery = getSortQuery(req.query["sort"]);
-    const posts = await getPosts(filterQuery, sortQuery);
+    const pageQuery = getPageQuery(req.query["page"]);
+    console.log("pageQuery", pageQuery, req.query);
+    const posts = await getPosts(filterQuery, sortQuery, pageQuery);
     return res.json(posts);
   } catch {
     return res.status(404).json({ error: "Error getting posts" });

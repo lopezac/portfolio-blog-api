@@ -18,8 +18,11 @@ async function createPost(title, text, keyword, published, user) {
   }
 }
 
-async function getPosts(filterOptions = {}, sortOptions = "timestamp") {
-  const posts = await Post.find(filterOptions).sort(sortOptions);
+async function getPosts(filterOptions, sortOptions, pageOptions) {
+  const posts = await Post.find(filterOptions)
+    .sort(sortOptions)
+    .limit(20)
+    .skip(pageOptions);
   return posts;
 }
 

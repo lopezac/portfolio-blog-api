@@ -28,8 +28,11 @@ function getSortQuery(query = "+timestamp") {
     const sortName = option.slice(1);
     sortOptions[sortName] = sortOrder;
   }
-  console.log("query", sortOptions);
   return sortOptions;
+}
+
+function getPageQuery(page = 1) {
+  return (page - 1) * 20;
 }
 
 module.exports = {
@@ -37,4 +40,5 @@ module.exports = {
   isObjectId,
   getFilterQuery,
   getSortQuery,
+  getPageQuery,
 };

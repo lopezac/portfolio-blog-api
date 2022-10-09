@@ -14,6 +14,11 @@ var indexRouter = require("./src/routes/index");
 
 var app = express();
 
+// const corsOptions = {
+//   origin: "",
+// };
+// app.options("*", cors(corsOptions));
+
 app.use(cors());
 app.use(helmet());
 app.use(logger("dev"));
