@@ -1,4 +1,3 @@
-const { format } = require("date-fns");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -9,10 +8,6 @@ const PostSchema = new Schema({
   timestamp: { type: Date, default: Date.now },
   published: { type: Boolean, default: false },
   user: { type: Schema.Types.ObjectId, required: true },
-});
-
-PostSchema.virtual("timestampFormat").get(function () {
-  return format(this.timestamp, "PPP");
 });
 
 module.exports = mongoose.model("Post", PostSchema);
