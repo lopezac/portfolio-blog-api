@@ -32,7 +32,7 @@ function getSortQuery(query = "+timestamp") {
 }
 
 function getPageQuery(page = 1) {
-  return (page - 1) * 20;
+  return (page - 1) * 10;
 }
 
 function getQueryOptions(query) {

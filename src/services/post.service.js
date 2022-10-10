@@ -19,11 +19,15 @@ async function createPost(title, text, keyword, published, user) {
 }
 
 async function getPosts(filterOptions, sortOptions, pageOptions) {
-  const posts = await Post.find(filterOptions)
-    .sort(sortOptions)
-    .limit(20)
-    .skip(pageOptions);
-  return posts;
+  try {
+    const posts = await Post.find(filterOptions)
+      .sort(sortOptions)
+      .limit(10)
+      .skip(pageOptions);
+    return posts;
+  } catch (err) {
+    throw Error("Error getting posts", filterOptions, sortOptions, pageOptions);
+  }
 }
 
 async function getPost(postId) {
