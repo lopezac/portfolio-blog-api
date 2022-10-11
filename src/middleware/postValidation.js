@@ -7,14 +7,12 @@ exports.createPost = [
   query("title", "Title can't be empty must be between 3 and 300 chars")
     .trim()
     .isLength({ min: 3, max: 300 })
-    // .custom((title) => {
-    //   return Post.findOne({ title: title }).exec((err, post) => {
-    //     console.log("post", post, title);
-    //     if (post) return true;
-    //     return false;
-    //     return post ? false : true;
-    //   });
-    // })
+    .custom(async (value) => {
+      const post = await Post.findOne({ title: value });
+      if (post !== null) {
+        return Promise.reject();
+      }
+    })
     .withMessage("There is a post with that name, pick another.")
     .escape(),
   query("keyword", "Keyword can't be empty must be between 2 and 80 chars")

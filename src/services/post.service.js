@@ -79,7 +79,7 @@ async function getPostByTitle(postId) {
   try {
     const title = formatTitle(postId);
     const post = await Post.findOne({
-      title: { $regex: title, $options: "i" },
+      title: { $regex: `^${title}$`, $options: "i" },
     });
     return post;
   } catch (err) {

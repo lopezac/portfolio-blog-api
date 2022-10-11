@@ -52,7 +52,8 @@ exports.posts_comments_get = async (req, res) => {
 
 exports.posts_id_put = async (req, res) => {
   try {
-    const { postId } = req.params;
+    const post = await getPost(req.params.postId);
+    const postId = post._id;
     const newPost = { _id: postId };
 
     for (const param in req.query) {
@@ -68,7 +69,8 @@ exports.posts_id_put = async (req, res) => {
 
 exports.posts_id_delete = async (req, res) => {
   try {
-    const { postId } = req.params;
+    const post = await getPost(req.params.postId);
+    const postId = post._id;
     const comments = await getPostComments(postId);
 
     await deleteComments(comments);
