@@ -19,11 +19,14 @@ exports.comments_get = async (req, res) => {
 
 exports.comments_post = async (req, res) => {
   try {
-    const { text, username, post } = req.query;
+    console.log("req query at api", req.query, req.body);
+    const { text, username, post } = req.body;
     const comment = await createComment(text, username, post);
     return res.json(comment);
   } catch (err) {
-    return res.status(400).json({ error: "Error while creating a comment" });
+    return res
+      .status(400)
+      .json({ error: "Error while creating a comment", err, body: req.body });
   }
 };
 

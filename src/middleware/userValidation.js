@@ -1,17 +1,17 @@
-const { query } = require("express-validator");
+const { body } = require("express-validator");
 
 const validationErrors = require("./validationErrors");
 
 exports.signUp = [
-  query("name", "Name must be between 2 and 150 chars")
+  body("name", "Name must be between 2 and 150 chars")
     .trim()
     .isLength({ min: 2, max: 150 })
     .escape(),
-  query("username", "Username must be between 2 and 100 chars")
+  body("username", "Username must be between 2 and 100 chars")
     .trim()
     .isLength({ min: 2, max: 100 })
     .escape(),
-  query("password", "Password must be between 7 and 150 chars")
+  body("password", "Password must be between 7 and 150 chars")
     .trim()
     .isLength({ min: 7, max: 150 })
     .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/)
@@ -21,10 +21,10 @@ exports.signUp = [
 ];
 
 exports.signIn = [
-  query("username", "Username must be between 2 and 100 chars")
+  body("username", "Username must be between 2 and 100 chars")
     .trim()
     .isLength({ min: 2, max: 100 })
     .escape(),
-  query("password", "Password must be between 7 and 150 chars").trim().escape(),
+  body("password", "Password must be between 7 and 150 chars").trim().escape(),
   validationErrors,
 ];

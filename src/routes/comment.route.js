@@ -9,7 +9,6 @@ router.get("/", commentController.comments_get);
 
 router.post(
   "/",
-  auth.JWTAuth(),
   commentValidation.createComment,
   commentController.comments_post
 );

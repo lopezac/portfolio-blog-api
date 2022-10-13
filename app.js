@@ -14,12 +14,16 @@ var indexRouter = require("./src/routes/index");
 
 var app = express();
 
-// const corsOptions = {
-//   origin: ["http://localhost:3000", "https://lopezaxel.netlify.app"],
-// };
+const corsOptions = {
+  origin: [
+    "http://localhost:3000",
+    "https://lopezaxel.netlify.app",
+    "http://localhost:4000",
+  ],
+};
 // app.options("*", cors(corsOptions));
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(logger("dev"));
 app.use(bodyParser.json());

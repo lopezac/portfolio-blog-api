@@ -1,44 +1,44 @@
-const { query, param } = require("express-validator");
+const { body, param } = require("express-validator");
 
 const validationErrors = require("./validationErrors");
 
 exports.createComment = [
-  query("post", "Post can't be empty and must be between 3 and 300 chars")
+  body("post", "Post can't be empty and must be between 3 and 300 chars")
     .trim()
     .isLength({ min: 3, max: 300 })
     .escape(),
-  query("text", "Text can't be empty and must be between 2 and 500 chars")
+  body("text", "Text can't be empty and must be between 2 and 500 chars")
     .trim()
     .isLength({ min: 2, max: 500 })
     .escape(),
-  query(
+  body(
     "username",
     "Username can't be empty and must be between 2 and 125 chars"
   )
     .trim()
     .isLength({ min: 2, max: 125 })
     .escape(),
-  query("timestamp").trim().optional(),
+  body("timestamp").trim().optional(),
   validationErrors,
 ];
 
 exports.updateComment = [
-  query("post", "Post must be between 3 and 300 chars")
+  body("post", "Post must be between 3 and 300 chars")
     .trim()
     .isLength({ min: 3, max: 300 })
     .escape()
     .optional(),
-  query("text", "Text must be between 2 and 500 chars")
+  body("text", "Text must be between 2 and 500 chars")
     .trim()
     .isLength({ min: 2, max: 500 })
     .escape()
     .optional(),
-  query("username", "Username must be between 2 and 125 chars")
+  body("username", "Username must be between 2 and 125 chars")
     .trim()
     .isLength({ min: 2, max: 125 })
     .escape()
     .optional(),
-  query("timestamp").trim().optional(),
+  body("timestamp").trim().optional(),
   validationErrors,
 ];
 

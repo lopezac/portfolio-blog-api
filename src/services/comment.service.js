@@ -1,12 +1,16 @@
 const Comment = require("../models/comment.model");
+const { getPost } = require("./post.service");
 
-async function createComment(text, username, post) {
+async function createComment(text, username, postTitle) {
   try {
-    const comment = new Comment({ text, username, post });
+    const post = await getPost(postTitle);
+    const postId = post._id;
+    const comment = new Comment({ text, username, post: postId });
+    console.log("postId,", postId, comment);
     await comment.save();
     return comment;
   } catch (err) {
-    throw Error("Error while creating comment", text, username, post);
+    throw Error("Error while creating comment", text, username, postTitle);
   }
 }
 
