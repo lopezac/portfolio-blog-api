@@ -42,8 +42,9 @@ exports.posts_id_get = async (req, res) => {
 
 exports.posts_comments_get = async (req, res) => {
   try {
-    const { postId } = req.params;
-    const comments = getPostComments(postId);
+    const post = await getPost(req.params.postId);
+    const postId = post._id;
+    const comments = await getPostComments(postId);
     return res.json(comments);
   } catch (err) {
     return res.status(503).json({ error: "Error finding post comments" });

@@ -15,7 +15,7 @@ var indexRouter = require("./src/routes/index");
 var app = express();
 
 // const corsOptions = {
-//   origin: "",
+//   origin: ["http://localhost:3000", "https://lopezaxel.netlify.app"],
 // };
 // app.options("*", cors(corsOptions));
 
