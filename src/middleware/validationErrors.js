@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       error: "Your body parameters are wrong",
-      errors,
+      errors: errors.errors,
       body: req.body,
       query: req.query,
     });

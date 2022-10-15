@@ -5,8 +5,8 @@ async function createComment(text, username, postTitle) {
   try {
     const post = await getPost(postTitle);
     const postId = post._id;
+
     const comment = new Comment({ text, username, post: postId });
-    console.log("postId,", postId, comment);
     await comment.save();
     return comment;
   } catch (err) {
