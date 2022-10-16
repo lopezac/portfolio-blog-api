@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "NODE_ENV=production node ./bin/www",
     "startDev": "nodemon ./bin/www",
-    "serverStart": "DEBUG=portfolio-blog-api:* npm run startDev"
+    "serverStart": "NODE_ENV=development DEBUG=portfolio-blog-api:* npm run startDev"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
