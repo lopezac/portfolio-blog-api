@@ -15,11 +15,7 @@ var indexRouter = require("./src/routes/index");
 var app = express();
 
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "https://lopezaxel.netlify.app",
-    "http://localhost:4000",
-  ],
+  origin: ["https://lopezaxel.netlify.app", /http:\/\/localhost:\d{4}$/],
 };
 // app.options("*", cors(corsOptions));
 
