@@ -21,10 +21,7 @@ exports.createPost = [
     .escape(),
   body("text", "Text can't be empty must be between 3 and 5000 chars")
     .trim()
-    .isLength({ min: 3, max: 5000 })
-    .escape(),
-  body("timestamp").trim().optional(),
-  body("published").escape().optional(),
+    .isLength({ min: 3, max: 5000 }),
   validationErrors,
 ];
 

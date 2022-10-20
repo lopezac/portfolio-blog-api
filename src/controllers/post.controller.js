@@ -13,6 +13,7 @@ exports.posts_get = async (req, res) => {
   try {
     const { filter, sort, page } = await getQueryOptions(req.query);
     const posts = await getPosts(filter, sort, page);
+
     return res.json(posts);
   } catch {
     return res.status(404).json({ error: "Error getting posts" });
@@ -21,9 +22,11 @@ exports.posts_get = async (req, res) => {
 
 exports.posts_post = async (req, res) => {
   try {
-    const { title, keyword, text, published } = req.query;
+    const { title, keyword, text } = req.body;
     const userId = req.user._id;
-    const post = await createPost(title, text, keyword, published, userId);
+
+    const post = await createPost(title, text, keyword, userId);
+
     return res.json(post);
   } catch (err) {
     return res.status(503).json({ error: "Error saving the post", err });
@@ -33,7 +36,9 @@ exports.posts_post = async (req, res) => {
 exports.posts_id_get = async (req, res) => {
   try {
     const { postId } = req.params;
+
     const post = await getPost(postId);
+
     return res.json(post);
   } catch (err) {
     return res.status(503).json({ error: "Error finding the post", err });
@@ -44,7 +49,9 @@ exports.posts_comments_get = async (req, res) => {
   try {
     const post = await getPost(req.params.postId);
     const postId = post._id;
+
     const comments = await getPostComments(postId);
+
     return res.json(comments);
   } catch (err) {
     return res.status(503).json({ error: "Error finding post comments" });
@@ -57,8 +64,8 @@ exports.posts_id_put = async (req, res) => {
     const postId = post._id;
     const newPost = { _id: postId };
 
-    for (const param in req.query) {
-      newPost[param] = req.query[param];
+    for (const param in req.body) {
+      newPost[param] = req.body[param];
     }
     await updatePost(postId, newPost);
 
