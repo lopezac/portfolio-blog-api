@@ -29,17 +29,14 @@ exports.updatePost = [
   body("title", "Title must be between 3 and 300 chars")
     .trim()
     .isLength({ min: 3, max: 300 })
-    .escape()
     .optional(),
   body("keyword", "Keyword must be between 2 and 80 chars")
     .trim()
     .isLength({ min: 2, max: 80 })
-    .escape()
     .optional(),
   body("text", "Text must be between 3 and 5000 chars")
     .trim()
     .isLength({ min: 3, max: 5000 })
-    .escape()
     .optional(),
   body("timestamp").trim().optional(),
   body("published").escape().optional(),

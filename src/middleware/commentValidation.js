@@ -11,10 +11,7 @@ exports.createComment = [
     .trim()
     .isLength({ min: 2, max: 500 })
     .escape(),
-  body(
-    "username",
-    "Username can't be empty and must be between 2 and 125 chars"
-  )
+  body("username", "Username must be empty or max 125 chars")
     .trim()
     .isLength({ min: 2, max: 125 })
     .escape(),

@@ -45,8 +45,8 @@ exports.comments_id_put = async (req, res) => {
     const { commentId } = req.params;
     const newComment = { _id: commentId };
 
-    for (const param in req.query) {
-      newComment[param] = req.query[param];
+    for (const param in req.body) {
+      newComment[param] = req.body[param];
     }
     await updateComment(commentId, newComment);
 
