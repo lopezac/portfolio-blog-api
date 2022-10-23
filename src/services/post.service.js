@@ -2,13 +2,14 @@ const Post = require("../models/post.model");
 const Comment = require("../models/comment.model");
 const { formatTitle, isObjectId } = require("../utils/helper.util");
 
-async function createPost(title, text, keyword, user) {
+async function createPost(title, text, keyword, user, imageUrl) {
   try {
     const post = new Post({
       title,
       text,
       keyword,
       user,
+      imageUrl,
     });
     await post.save();
     return post;

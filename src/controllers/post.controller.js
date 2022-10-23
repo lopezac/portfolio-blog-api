@@ -22,10 +22,10 @@ exports.posts_get = async (req, res) => {
 
 exports.posts_post = async (req, res) => {
   try {
-    const { title, keyword, text } = req.body;
+    const { title, keyword, text, imageUrl } = req.body;
     const userId = req.user._id;
 
-    const post = await createPost(title, text, keyword, userId);
+    const post = await createPost(title, text, keyword, userId, imageUrl);
 
     return res.json(post);
   } catch (err) {
