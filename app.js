@@ -15,11 +15,15 @@ var app = express();
 
 const whitelist = [
   "https://lopezaxel.netlify.app",
-  /http:\/\/localhost:\d{4}$/,
+  "https://lopezaxel-blog-cms.netlify.app",
+  "http://localhost:3001",
+  "http://localhost:3000",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log("whitelist", origin, whitelist.indexOf(origin));
     if (whitelist.indexOf(origin) !== -1) {
+      console.log("origin", origin);
       callback(null, true);
     } else {
       callback(new Error("Origin not allowed by CORS"));

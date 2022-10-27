@@ -8,8 +8,12 @@ async function hashPassword(password) {
 }
 
 async function createToken(user) {
-  const token = await jwt.sign(user.toJSON(), process.env.JWT_KEY);
-  return token;
+  try {
+    const token = await jwt.sign(user.toJSON(), process.env.JWT_KEY);
+    return token;
+  } catch (err) {
+    throw Error("Error creating token");
+  }
 }
 
 async function createUser(name, username, password) {
