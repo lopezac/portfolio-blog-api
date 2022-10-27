@@ -4,7 +4,6 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const helmet = require("helmet");
 require("dotenv").config();
 
@@ -14,10 +13,19 @@ var indexRouter = require("./src/routes/index");
 
 var app = express();
 
+const whitelist = [
+  "https://lopezaxel.netlify.app",
+  /http:\/\/localhost:\d{4}$/,
+];
 const corsOptions = {
-  origin: ["https://lopezaxel.netlify.app", /http:\/\/localhost:\d{4}$/],
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Origin not allowed by CORS"));
+    }
+  },
 };
-// app.options("*", cors(corsOptions));
 
 app.use(cors(corsOptions));
 app.use(helmet());
