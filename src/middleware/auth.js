@@ -31,6 +31,7 @@ const opts = {
   secretOrKey: process.env.JWT_KEY,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
+// console.log("secretOrKey", opts.secretOrKey);
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
     User.findById(jwt_payload._id).exec((err, user) => {

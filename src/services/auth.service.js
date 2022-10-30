@@ -16,10 +16,14 @@ async function createToken(user) {
   }
 }
 
-async function createUser(name, username, password) {
-  const user = new User({ name, username, password });
-  await user.save();
-  return user;
+async function createUser(username, password) {
+  try {
+    const user = new User({ username, password });
+    await user.save();
+    return user;
+  } catch (err) {
+    throw Error("Error creating user at services api");
+  }
 }
 
 module.exports = {

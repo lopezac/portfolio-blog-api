@@ -3,10 +3,6 @@ const { body } = require("express-validator");
 const validationErrors = require("./validationErrors");
 
 exports.signUp = [
-  body("name", "Name must be between 2 and 150 chars")
-    .trim()
-    .isLength({ min: 2, max: 150 })
-    .escape(),
   body("username", "Username must be between 2 and 100 chars")
     .trim()
     .isLength({ min: 2, max: 100 })

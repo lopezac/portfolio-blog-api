@@ -6,9 +6,9 @@ const {
 
 exports.sign_up_post = async (req, res) => {
   try {
-    const { name, username, password } = req.body;
+    const { username, password } = req.body;
     const hashedPassword = await hashPassword(password);
-    const user = await createUser(name, username, hashedPassword);
+    const user = await createUser(username, hashedPassword);
     return res.json(user);
   } catch (err) {
     return res.status(503).json({ error: "Error signing up the user" });
