@@ -28,7 +28,7 @@ passport.use(
 
 // JWT(JSON Web Token) strategy
 const opts = {
-  secretOrKey: process.env.JWT_KEY,
+  secretOrKey: "pantaleon;,.portfolioblogapi1+", //process.env.JWT_KEY,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 // console.log("secretOrKey", opts.secretOrKey);

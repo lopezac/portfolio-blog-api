@@ -13,8 +13,7 @@ exports.createPost = [
         return Promise.reject();
       }
     })
-    .withMessage("There is a post with that name, pick another.")
-    .escape(),
+    .withMessage("There is a post with that name, pick another."),
   body("keyword", "Keyword can't be empty must be between 2 and 80 chars")
     .trim()
     .isLength({ min: 2, max: 80 })
