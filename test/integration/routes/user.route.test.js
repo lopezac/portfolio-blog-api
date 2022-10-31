@@ -39,11 +39,5 @@ describe("auth", () => {
       .post("/sign-in")
       .send({ username: "axel", password: "Password.,1" })
       .expect(200, done);
-    // .then(() => {
-    //   request(app)
-    //     .post("/sign-out")
-    //     .expect("Content-Type", /json/)
-    //     .expect(200, done);
-    // });
   });
 });

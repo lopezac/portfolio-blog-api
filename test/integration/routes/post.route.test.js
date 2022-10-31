@@ -99,4 +99,34 @@ describe("posts", () => {
         expect(res.body.imageUrl).toBe(post.imageUrl);
       });
   });
+
+  test("get posts works", async () => {
+    const posts = await Post.find({});
+
+    await request(app)
+      .get(`/posts`)
+      .then(async (res) => {
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual(posts);
+      });
+  });
+
+  test("update post works", async () => {
+    const posts = await Post.find({});
+    const post = posts[0];
+
+    await request(app)
+      .update(`/posts/${post._id}`)
+      .send({ title: "a new title", keyword: "new" })
+      .then(async (res) => {
+        expect(res.statusCode).toBe(200);
+        expect(res.body.title).not.toBe(post.title);
+        expect(res.body.keyword).not.toBe(post.keyword);
+        expect(res.body._id).toBe(post._id);
+        expect(res.body.published).toBe(post.published);
+        expect(res.body.imageUrl).toBe(post.imageUrl);
+        expect(res.body.text).toBe(post.text);
+        expect(res.body.timestamp).toBe(post.timestamp);
+      });
+  });
 });
