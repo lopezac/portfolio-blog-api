@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
 
-function formatTitle(title) {
-  return title.toLowerCase().replaceAll("-", " ");
-}
-
 function isObjectId(string) {
   return mongoose.isObjectIdOrHexString(string);
 }
@@ -24,7 +20,7 @@ function getSortQuery(query = "+timestamp") {
     // There is a bug, '+' character appears as ' ' for some reason.
     // Later study it and become article idea.
     // 1 means ascendent and -1 descendent
-    const sortOrder = option[0] === " " ? 1 : -1;
+    const sortOrder = [" ", "+"].includes(option[0]) ? 1 : -1;
     const sortName = option.slice(1);
     sortOptions[sortName] = sortOrder;
   }
@@ -43,7 +39,6 @@ function getQueryOptions(query) {
 }
 
 module.exports = {
-  formatTitle,
   isObjectId,
   getQueryOptions,
 };

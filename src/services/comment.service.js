@@ -1,16 +1,16 @@
 const Comment = require("../models/comment.model");
 const { getPost } = require("./post.service");
 
-async function createComment(text, username, postTitle) {
+async function createComment(text, username, postIdentifier) {
   try {
-    const post = await getPost(postTitle);
+    const post = await getPost(postIdentifier);
     const postId = post._id;
 
     const comment = new Comment({ text, username, post: postId });
     await comment.save();
     return comment;
   } catch (err) {
-    throw Error("Error while creating comment", text, username, postTitle);
+    throw Error("Error while creating comment", err);
   }
 }
 
@@ -44,7 +44,11 @@ async function deleteComments(comments) {
 
 async function updateComment(commentId, newComment) {
   try {
-    await Comment.findByIdAndUpdate(commentId, newComment);
+    const doc = await Comment.findById(commentId);
+    for (let param in newComment) {
+      doc[param] = newComment[param];
+    }
+    return await doc.save();
   } catch (err) {
     throw Error("Error updating a comment", commentId, newComment);
   }

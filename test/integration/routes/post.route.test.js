@@ -1,6 +1,10 @@
 const postRouter = require("../../../src/routes/post.route");
 const userRouter = require("../../../src/routes/user.route");
-const initializeMongoServer = require("../configs/db.config");
+const {
+  initializeMongoServer,
+  clearMongoServer,
+  closeMongoServer,
+} = require("../configs/db.config");
 const data = require("../data");
 const Post = require("../../../src/models/post.model");
 const Comment = require("../../../src/models/comment.model");
@@ -16,9 +20,10 @@ app.use("/posts", postRouter);
 app.use("/", userRouter);
 
 let token;
-beforeAll(async () => {
-  await initializeMongoServer();
-
+beforeAll(async () => await initializeMongoServer());
+afterEach(async () => await clearMongoServer());
+afterAll(async () => await closeMongoServer());
+beforeEach(async () => {
   // Sign up then sign in and set token
   const user = await request(app)
     .post("/sign-up")
@@ -40,6 +45,24 @@ describe("posts", () => {
   // jest.setTimeout(15000);
   test("throws error if not authenticated at auth endpoints", (done) => {
     request(app).post("/posts").expect(401, done);
+  });
+
+  test("get posts works", async () => {
+    const posts = await Post.find({}).sort("-timestamp");
+
+    await request(app)
+      .get(`/posts`)
+      .then(async (res) => {
+        expect(res.statusCode).toBe(200);
+        for (let i = 0; i < posts.length; i++) {
+          expect(posts[i].title).toBe(res.body[i].title);
+          expect(posts[i].keyword).toBe(res.body[i].keyword);
+          expect(posts[i].timestamp).toBe(res.body[i].timestamp);
+          expect(posts[i].text).toBe(res.body[i].text);
+          expect(posts[i].user).toBeTruthy();
+          expect(posts[i]._id).toBeTruthy();
+        }
+      });
   });
 
   test("create post works", (done) => {
@@ -91,7 +114,7 @@ describe("posts", () => {
       .get(`/posts/${post._id}`)
       .then(async (res) => {
         expect(res.statusCode).toBe(200);
-        expect(res.body._id).toEqual(post._id);
+        expect(res.body._id).toBeTruthy();
         expect(res.body.title).toBe(post.title);
         expect(res.body.published).toBeFalsy();
         expect(res.body.keyword).toBe(post.keyword);
@@ -100,29 +123,19 @@ describe("posts", () => {
       });
   });
 
-  test("get posts works", async () => {
-    const posts = await Post.find({});
-
-    await request(app)
-      .get(`/posts`)
-      .then(async (res) => {
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual(posts);
-      });
-  });
-
   test("update post works", async () => {
     const posts = await Post.find({});
     const post = posts[0];
 
     await request(app)
-      .update(`/posts/${post._id}`)
+      .put(`/posts/${post._id}`)
       .send({ title: "a new title", keyword: "new" })
+      .set("Authorization", `Bearer ${token}`)
       .then(async (res) => {
         expect(res.statusCode).toBe(200);
         expect(res.body.title).not.toBe(post.title);
         expect(res.body.keyword).not.toBe(post.keyword);
-        expect(res.body._id).toBe(post._id);
+        expect(res.body._id).toBeTruthy();
         expect(res.body.published).toBe(post.published);
         expect(res.body.imageUrl).toBe(post.imageUrl);
         expect(res.body.text).toBe(post.text);

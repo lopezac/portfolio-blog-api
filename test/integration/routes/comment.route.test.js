@@ -1,9 +1,13 @@
 const userRouter = require("../../../src/routes/user.route");
 const commentRouter = require("../../../src/routes/comment.route");
-const initializeMongoServer = require("../configs/db.config");
+const {
+  initializeMongoServer,
+  clearMongoServer,
+  closeMongoServer,
+} = require("../configs/db.config");
 const data = require("../data");
-const Post = require("../../../src/models/post.model");
 const Comment = require("../../../src/models/comment.model");
+const Post = require("../../../src/models/post.model");
 
 require("dotenv").config();
 const request = require("supertest");
@@ -16,9 +20,8 @@ app.use("/comments", commentRouter);
 app.use("/", userRouter);
 
 let token;
-beforeAll(async () => {
-  await initializeMongoServer();
-
+beforeAll(async () => await initializeMongoServer());
+beforeEach(async () => {
   // Sign up then sign in and set token
   const user = await request(app)
     .post("/sign-up")
@@ -29,12 +32,37 @@ beforeAll(async () => {
   token = res.body;
 
   // Create some posts and comments
-  for (let comment of data.comments) {
-    await Comment.create({ ...comment, post: "507f191e810c19729de860ea" });
+  for (let i = 0; i < data.posts.length; i++) {
+    const postData = data.posts[i];
+    const post = await Post.create({ ...postData, user: user.body._id });
+    await Comment.create({ ...data.comments[i], post: post._id });
   }
 });
+afterEach(async () => await clearMongoServer());
+afterAll(async () => await closeMongoServer());
 
 describe("comments", () => {
+  test("create comment works", async () => {
+    const posts = await Post.find({});
+    const post = posts[0];
+    const comment = {
+      text: "some random text",
+      username: "some user",
+      post: post._id,
+    };
+
+    await request(app)
+      .post("/comments")
+      .send(comment)
+      .then(async (res) => {
+        expect(res.statusCode).toBe(200);
+        expect(res.body.username).toBe(comment.username);
+        expect(res.body.text).toBe(comment.text);
+        expect(res.body._id).toBeTruthy();
+        expect(res.body.post).toBeTruthy();
+      });
+  });
+
   test("get comment work", async () => {
     const comments = await Comment.find({});
     const comment = comments[0];
@@ -44,8 +72,8 @@ describe("comments", () => {
       .then(async (res) => {
         // try to do expect(res.body).toEqual(comment);
         expect(res.statusCode).toBe(200);
-        expect(res.body._id).toEqual(comment._id);
-        expect(res.body.post).toEqual(comment.post);
+        expect(res.body._id).toBeTruthy();
+        expect(res.body.post).toBeTruthy();
         expect(res.body.username).toBe(comment.username);
         expect(res.body.text).toBe(comment.text);
         expect(res.body.timestamp).toBe(comment.timestamp);
@@ -60,22 +88,13 @@ describe("comments", () => {
       .then(async (res) => {
         expect(res.statusCode).toBe(200);
         // if it not works do the long way each property
-        expect(res.body).toEqual(comments);
-      });
-  });
-
-  test("create comment works", async () => {
-    const comment = { text: "some random text", username: "some user" };
-
-    request(app)
-      .post("/comments")
-      .send(comment)
-      .then(async (res) => {
-        expect(res.status).toBe(200);
-        expect(res.body.username).toBe(comment.username);
-        expect(res.body.text).toBe(comment.text);
-        expect(res.body._id).toBeTruthy();
-        expect(res.body.post).toBeTruthy();
+        for (let i = 0; i < comments.length; i++) {
+          expect(comments[i].text).toBe(res.body[i].text);
+          expect(comments[i].timestamp).toBe(res.body[i].timestamp);
+          expect(comments[i].username).toBe(res.body[i].username);
+          expect(comments[i]._id).toBeTruthy();
+          expect(comments[i].post).toBeTruthy();
+        }
       });
   });
 
@@ -84,15 +103,16 @@ describe("comments", () => {
     const comment = comments[0];
 
     await request(app)
-      .post(`/comments/${comment._id}`)
+      .put(`/comments/${comment._id}`)
       .send({ username: "Another suouao", text: "more less text" })
       .set("Authorization", `Bearer ${token}`)
       .then(async (res) => {
         expect(res.statusCode).toBe(200);
-        expect(res.body.title).not.toBe(comment.title);
+        expect(res.body.text).not.toBe(comment.text);
         expect(res.body.username).not.toBe(comment.username);
-        expect(res.body._id).toBe(comment._id);
-        expect(res.body.post).toBe(comment.post);
+        expect(res.body._id).toBeTruthy();
+        expect(res.body.post).toBeTruthy();
+        expect(res.body.timestamp).toBe(comment.timestamp);
       });
   });
 

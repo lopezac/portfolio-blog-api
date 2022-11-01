@@ -60,7 +60,11 @@ async function deletePost(postId) {
 
 async function updatePost(postId, newPost) {
   try {
-    await Post.findByIdAndUpdate(postId, newPost);
+    const doc = await Post.findById(postId);
+    for (let param in newPost) {
+      doc[param] = newPost[param];
+    }
+    return await doc.save();
   } catch (err) {
     throw Error("Error while updating post");
   }

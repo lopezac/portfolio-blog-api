@@ -7,7 +7,6 @@ module.exports = (req, res, next) => {
       error: "Your body parameters are wrong",
       errors: errors.errors,
       body: req.body,
-      query: req.query,
     });
   }
   next();

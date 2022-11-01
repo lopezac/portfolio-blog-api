@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
+let mongoServer = MongoMemoryServer;
+
 async function initializeMongoServer() {
-  const mongoServer = await MongoMemoryServer.create();
+  mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
 
   mongoose.connect(mongoUri);
@@ -16,4 +18,17 @@ async function initializeMongoServer() {
   });
 }
 
-module.exports = initializeMongoServer;
+async function clearMongoServer() {
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    await collections[key].deleteMany({});
+  }
+}
+
+async function closeMongoServer() {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  await mongoServer.stop();
+}
+
+module.exports = { initializeMongoServer, clearMongoServer, closeMongoServer };

@@ -2,7 +2,10 @@ require("dotenv").config();
 const request = require("supertest");
 const express = require("express");
 const userRouter = require("../../../src/routes/user.route");
-const initializeMongoServer = require("../configs/db.config");
+const {
+  initializeMongoServer,
+  closeMongoServer,
+} = require("../configs/db.config");
 
 const app = express();
 
@@ -13,7 +16,7 @@ app.use("/", userRouter);
 beforeAll(async () => {
   await initializeMongoServer();
 });
-// afterAll(async () => await db.close());
+afterAll(async () => await closeMongoServer());
 
 describe("auth", () => {
   jest.setTimeout(15000);

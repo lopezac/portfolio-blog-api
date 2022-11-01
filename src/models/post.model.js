@@ -6,7 +6,7 @@ const PostSchema = new Schema({
   keyword: { type: String, required: true, minLength: 2, maxLength: 80 },
   text: { type: String, required: true, minLength: 3, maxLength: 5000 },
   imageUrl: { type: String, required: true },
-  timestamp: { type: Date, default: Date.now },
+  timestamp: { type: String, default: Date.now().toString() },
   published: { type: Boolean, default: false },
   user: { type: Schema.Types.ObjectId, required: true },
 });

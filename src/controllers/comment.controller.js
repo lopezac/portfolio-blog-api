@@ -19,7 +19,6 @@ exports.comments_get = async (req, res) => {
 
 exports.comments_post = async (req, res) => {
   try {
-    console.log("req query at api", req.query, req.body);
     const { text, username, post } = req.body;
     const comment = await createComment(text, username, post);
     return res.json(comment);
@@ -48,9 +47,9 @@ exports.comments_id_put = async (req, res) => {
     for (const param in req.body) {
       newComment[param] = req.body[param];
     }
-    await updateComment(commentId, newComment);
+    const updatedComment = await updateComment(commentId, newComment);
 
-    return res.json({ message: "Succesfully updated the comment", commentId });
+    return res.json(updatedComment);
   } catch (err) {
     return res.status(503).json({ error: "Error updating a comment" });
   }

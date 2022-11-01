@@ -67,9 +67,9 @@ exports.posts_id_put = async (req, res) => {
     for (const param in req.body) {
       newPost[param] = req.body[param];
     }
-    await updatePost(postId, newPost);
+    const updatedPost = await updatePost(postId, newPost);
 
-    return res.json({ message: "Succesfully updated the post ", postId });
+    return res.json(updatedPost);
   } catch (err) {
     return res.status(503).json({ error: "Error updating the post", err });
   }
