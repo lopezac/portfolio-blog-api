@@ -13,17 +13,18 @@ require("./src/middleware/auth");
 require("./src/configs/db.config");
 var indexRouter = require("./src/routes/index");
 
+const registerCommentHandlers = require("Utils/commentHandler.js");
 var app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-io.on("connection", (socket) => {
-  console.log(`Connection with socket ${socket.id}`);
+const onConnection = (socket) => {
+  registerCommentHandlers(io, socket);
+};
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-});
+io.on("connection", onConnection);
+
+httpServer.listen(4000);
 
 const whitelist = [
   "https://lopezaxel.netlify.app",
