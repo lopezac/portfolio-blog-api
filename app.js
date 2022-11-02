@@ -1,5 +1,7 @@
 var createError = require("http-errors");
 var express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
@@ -12,6 +14,16 @@ require("./src/configs/db.config");
 var indexRouter = require("./src/routes/index");
 
 var app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer);
+
+io.on("connection", (socket) => {
+  console.log(`Connection with socket ${socket.id}`);
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
 
 const whitelist = [
   "https://lopezaxel.netlify.app",
@@ -21,9 +33,7 @@ const whitelist = [
 ];
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("whitelist", origin, whitelist.indexOf(origin));
     if (whitelist.indexOf(origin) !== -1) {
-      console.log("origin", origin);
       callback(null, true);
     } else {
       callback(new Error("Origin not allowed by CORS"));
