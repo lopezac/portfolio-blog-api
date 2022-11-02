@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+function formatTitle(title) {
+  return title.toLowerCase().replaceAll("-", " ");
+}
+
 function isObjectId(string) {
   return mongoose.isObjectIdOrHexString(string);
 }
@@ -41,4 +45,5 @@ function getQueryOptions(query) {
 module.exports = {
   isObjectId,
   getQueryOptions,
+  formatTitle,
 };

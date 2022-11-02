@@ -1,4 +1,4 @@
-# members-only
+# portfolio-blog-api
 
 This is the RESTful API of my Portfolio Blog. It has CRUD operations for posts
 and comments and user authentication.
