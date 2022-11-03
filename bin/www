@@ -7,6 +7,7 @@
 var app = require("../app");
 var debug = require("debug")("portfolio-blog-api:server");
 var http = require("http");
+const socketApi = require("../src/configs/socketApi.config");
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +20,10 @@ app.set("port", port);
  * Create HTTP server.
  */
 
+//  const app = require("../../app");
+//  httpServer.listen(4000);
 var server = http.createServer(app);
+socketApi.io.attach(server);
 
 /**
  * Listen on provided port, on all network interfaces.

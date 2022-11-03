@@ -84,7 +84,7 @@ exports.posts_id_delete = async (req, res) => {
     await deleteComments(comments);
     await deletePost(postId);
 
-    return res.json({ message: "Succesfully deleted post and it's comments" });
+    return res.json(postId);
   } catch (err) {
     return res.status(503).json({ error: "Error deleting the port ", err });
   }
