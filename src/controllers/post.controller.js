@@ -68,8 +68,10 @@ exports.posts_id_put = async (req, res) => {
       newPost[param] = req.body[param];
     }
     const updatedPost = await updatePost(postId, newPost);
+    const data = await res.json(updatedPost);
+    console.log("data at posts_id_put", data, typeof data);
 
-    return res.json(updatedPost);
+    return data;
   } catch (err) {
     return res.status(503).json({ error: "Error updating the post", err });
   }

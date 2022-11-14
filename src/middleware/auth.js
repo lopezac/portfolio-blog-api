@@ -28,10 +28,10 @@ passport.use(
 
 // JWT(JSON Web Token) strategy
 const opts = {
-  secretOrKey: "pantaleon;,.portfolioblogapi1+", //process.env.JWT_KEY,
+  secretOrKey: process.env.JWT_KEY, //process.env.JWT_KEY,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
-// console.log("secretOrKey", opts.secretOrKey);
+
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
     User.findById(jwt_payload._id).exec((err, user) => {
